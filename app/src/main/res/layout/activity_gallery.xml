@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".activity.GalleryActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/gallery_bar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.example.emotiongallery.overrideview.AnyView
+            android:id="@+id/gallery_add_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/gallery_line_1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey"
+        app:layout_constraintTop_toBottomOf="@id/gallery_bar" />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/gallery_emotion_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/grey_background"
+        app:layout_constraintBottom_toTopOf="@id/gallery_line_2"
+        app:layout_constraintTop_toBottomOf="@id/gallery_line_1" />
+
+    <View
+        android:id="@+id/gallery_line_2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/gallery_preview_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black_alpha_20"
+        android:visibility="invisible">
+
+        <View
+            android:id="@+id/gallery_preview_blank_1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/gallery_preview_image"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_weight="1" />
+
+        <ImageView
+            android:id="@+id/gallery_preview_image"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintBottom_toTopOf="@id/gallery_preview_blank_2"
+            app:layout_constraintTop_toBottomOf="@id/gallery_preview_blank_1"
+            app:layout_constraintVertical_weight="2" />
+
+        <View
+            android:id="@+id/gallery_preview_blank_2"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/gallery_preview_image"
+            app:layout_constraintVertical_weight="1" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
