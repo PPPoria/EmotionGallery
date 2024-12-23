@@ -8,6 +8,7 @@
         android:id="@+id/row_emotion_1"
         android:layout_width="60dp"
         android:layout_height="60dp"
+        android:contentDescription="@string/emotion"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/row_emotion_2"
         app:layout_constraintStart_toStartOf="parent"
@@ -17,6 +18,7 @@
         android:id="@+id/row_emotion_2"
         android:layout_width="60dp"
         android:layout_height="60dp"
+        android:contentDescription="@string/emotion"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/row_emotion_3"
         app:layout_constraintStart_toEndOf="@id/row_emotion_1"
@@ -26,6 +28,7 @@
         android:id="@+id/row_emotion_3"
         android:layout_width="60dp"
         android:layout_height="60dp"
+        android:contentDescription="@string/emotion"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/row_emotion_4"
         app:layout_constraintStart_toEndOf="@id/row_emotion_2"
@@ -35,9 +38,54 @@
         android:id="@+id/row_emotion_4"
         android:layout_width="60dp"
         android:layout_height="60dp"
+        android:contentDescription="@string/emotion"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/row_emotion_3"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/row_emotion_divider_1"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/black_alpha_40"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@id/row_emotion_1"
+        app:layout_constraintEnd_toEndOf="@id/row_emotion_1"
+        app:layout_constraintStart_toStartOf="@id/row_emotion_1"
+        app:layout_constraintTop_toTopOf="@id/row_emotion_1" />
+
+    <View
+        android:id="@+id/row_emotion_divider_2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/black_alpha_40"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@id/row_emotion_2"
+        app:layout_constraintEnd_toEndOf="@id/row_emotion_2"
+        app:layout_constraintStart_toStartOf="@id/row_emotion_2"
+        app:layout_constraintTop_toTopOf="@id/row_emotion_2" />
+
+    <View
+        android:id="@+id/row_emotion_divider_3"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/black_alpha_40"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@id/row_emotion_3"
+        app:layout_constraintEnd_toEndOf="@id/row_emotion_3"
+        app:layout_constraintStart_toStartOf="@id/row_emotion_3"
+        app:layout_constraintTop_toTopOf="@id/row_emotion_3" />
+
+    <View
+        android:id="@+id/row_emotion_divider_4"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/black_alpha_40"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@id/row_emotion_4"
+        app:layout_constraintEnd_toEndOf="@id/row_emotion_4"
+        app:layout_constraintStart_toStartOf="@id/row_emotion_4"
+        app:layout_constraintTop_toTopOf="@id/row_emotion_4" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

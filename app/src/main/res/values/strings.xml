@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">EmotionGallery</string>
+    <string name="emotion">表情包</string>
+    <string name="previewImg">预览图片</string>
+    <string name="quantity">数量</string>
+    <string name="manage">管理</string>
+    <string name="delete">删除</string>
+    <string name="export">导出</string>
+    <string name="shareToQQ">分享到QQ</string>
 </resources>

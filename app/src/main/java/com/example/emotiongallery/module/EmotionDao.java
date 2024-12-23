@@ -19,5 +19,5 @@ public interface EmotionDao {
     List<Emotion> getAllEmotions();
 
     @Query("SELECT * FROM Emotion WHERE sort = :sort")
-    List<Emotion> getEmotionBySort(String sort);
+    List<Emotion> getEmotionsBySort(String sort);
 }

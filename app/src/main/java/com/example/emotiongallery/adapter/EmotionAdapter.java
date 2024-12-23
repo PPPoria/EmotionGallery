@@ -26,23 +26,55 @@ public class EmotionAdapter extends RecyclerView.Adapter<EmotionAdapter.EmotionH
     private static final String TAG = "EmotionAdapter";
 
     private static final List<Emotion> list = new ArrayList<>();
-
-    private volatile Context context;
+    private static final List<Emotion> selectedList = new ArrayList<>();
+    private static final Emotion addButton = new Emotion(0, "add_button", null);
+    private static boolean isMultipleChoice = false;
+    private final Context context;
     private volatile GalleryActivity activity;
 
     public EmotionAdapter(Context context) {
         this.context = context;
     }
 
-    @SuppressLint("NotifyDataSetChanged")
+    //刷新列表
     public void refresh(GalleryActivity activity, String sort) {
         this.activity = activity;
-        new Thread(() -> {
+        Presenter.getThreadPool().submit(() -> {
             EmotionDB db = Presenter.getEmotionDB(context);
             list.clear();
-            list.addAll(db.emotionDao().getAllEmotions());
+            list.addAll(db.emotionDao().getEmotionsBySort(sort));
+            list.add(addButton);
+            Log.d(TAG, "refresh: list.size() = " + list.size());
+            isMultipleChoice = false;
             activity.runOnUiThread(this::notifyDataSetChanged);
-        }).start();
+            activity.runOnUiThread(() -> {
+                activity.emotionQuantity.setText(String.valueOf(list.size() - 1));
+                activity.manageBtn.setVisibility(View.VISIBLE);
+                activity.deleteBtn.setVisibility(View.INVISIBLE);
+                activity.exportBtn.setVisibility(View.INVISIBLE);
+            });
+        });
+    }
+
+    //多选模式
+    public void multipleChoice(GalleryActivity activity) {
+        this.activity = activity;
+        selectedList.clear();
+        list.remove(addButton);
+        Log.d(TAG, "multipleChoice: list.size() = " + list.size());
+        isMultipleChoice = true;
+        activity.runOnUiThread(this::notifyDataSetChanged);
+        activity.emotionQuantity.setText(String.valueOf(selectedList.size()));
+    }
+
+    //得到多选状态
+    public boolean getIsMultipleChoice() {
+        return isMultipleChoice;
+    }
+
+    //得到选中的表情
+    public List<Emotion> getSelectedList() {
+        return selectedList;
     }
 
     @NonNull
@@ -57,16 +89,43 @@ public class EmotionAdapter extends RecyclerView.Adapter<EmotionAdapter.EmotionH
         for (int i = 0; i < 4; i++) {
             int index = list.size() - i - 4 * position - 1;
             if (index < 0) break;
+            if (index == list.size() - 1 && list.get(index) == addButton) {
+                //显示添加按钮
+                Glide.with(context)
+                        .load(R.drawable.ic_add_button)
+                        .into(holder.emotions.get(i));
+                holder.dividers.get(i).setVisibility(View.INVISIBLE);
+                holder.emotions.get(i).setOnClickListener(v -> activity.runOnUiThread(activity::openGallery));
+                continue;
+            }
             Glide.with(context)
                     .load(context.getFilesDir().getPath() + "/" + list.get(index).fileName)
                     .into(holder.emotions.get(i));
-            holder.emotions.get(i).setOnClickListener(v -> activity.runOnUiThread(() -> activity.previewEmotion(list.get(index))));
+            if (isMultipleChoice) holder.dividers.get(i).setVisibility(View.VISIBLE);
+            else holder.dividers.get(i).setVisibility(View.INVISIBLE);
+            holder.emotions.get(i).setOnClickListener(v -> activity.runOnUiThread(() -> {
+                //点击表情
+                if (isMultipleChoice) {
+                    //多选模式下，点击表情切换选择状态
+                    int I = list.size() - index - 4 * holder.getAdapterPosition() - 1;
+                    if (holder.dividers.get(I).getVisibility() == View.VISIBLE) {
+                        holder.dividers.get(I).setVisibility(View.INVISIBLE);
+                        selectedList.add(list.get(index));
+                    } else {
+                        holder.dividers.get(I).setVisibility(View.VISIBLE);
+                        selectedList.remove(list.get(index));
+                    }
+                    activity.emotionQuantity.setText(String.valueOf(selectedList.size()));
+                } else {
+                    //非多选模式下，点击表情预览
+                    activity.previewEmotion(list.get(index));
+                }
+            }));
         }
     }
 
     @Override
     public int getItemCount() {
-        Log.d(TAG, "list.size() = " + list.size());
         if (list.size() % 4 == 0) return list.size() / 4;
         else return list.size() / 4 + 1;
     }
@@ -74,6 +133,7 @@ public class EmotionAdapter extends RecyclerView.Adapter<EmotionAdapter.EmotionH
     public static class EmotionHolder extends RecyclerView.ViewHolder {
 
         public List<ImageView> emotions = new ArrayList<>();
+        public List<View> dividers = new ArrayList<>();
 
         public EmotionHolder(@NonNull View itemView) {
             super(itemView);
@@ -81,6 +141,10 @@ public class EmotionAdapter extends RecyclerView.Adapter<EmotionAdapter.EmotionH
             emotions.add(itemView.findViewById(R.id.row_emotion_2));
             emotions.add(itemView.findViewById(R.id.row_emotion_3));
             emotions.add(itemView.findViewById(R.id.row_emotion_4));
+            dividers.add(itemView.findViewById(R.id.row_emotion_divider_1));
+            dividers.add(itemView.findViewById(R.id.row_emotion_divider_2));
+            dividers.add(itemView.findViewById(R.id.row_emotion_divider_3));
+            dividers.add(itemView.findViewById(R.id.row_emotion_divider_4));
         }
     }
 }

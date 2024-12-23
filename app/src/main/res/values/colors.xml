@@ -9,4 +9,8 @@
     <color name="black_alpha_20">#33000000</color>
     <color name="black_alpha_40">#66000000</color>
     <color name="black_alpha_60">#99000000</color>
+
+    <color name="red">#E44848</color>
+    <color name="green">#59C759</color>
+    <color name="blue">#398EFF</color>
 </resources>
