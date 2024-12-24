@@ -7,4 +7,8 @@
     <string name="delete">删除</string>
     <string name="export">导出</string>
     <string name="shareToQQ">分享到QQ</string>
+    <string name="sort_input_hint">请输入新类名</string>
+    <string name="confirm">确认</string>
+    <string name="cancel">取消</string>
+    <string name="default_text">默认</string>
 </resources>

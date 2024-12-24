@@ -51,6 +51,8 @@ public class EmotionAdapter extends RecyclerView.Adapter<EmotionAdapter.EmotionH
                 activity.manageBtn.setVisibility(View.VISIBLE);
                 activity.deleteBtn.setVisibility(View.INVISIBLE);
                 activity.exportBtn.setVisibility(View.INVISIBLE);
+                activity.sortLayout.setVisibility(View.INVISIBLE);
+                activity.sortText.setVisibility(View.VISIBLE);
             });
         });
     }
@@ -128,6 +130,7 @@ public class EmotionAdapter extends RecyclerView.Adapter<EmotionAdapter.EmotionH
                     selectedList.clear();
                     selectedList.add(list.get(index));
                     activity.previewEmotion(list.get(index));
+                    activity.sortLayout.setVisibility(View.INVISIBLE);
                 }
             }));
         }

@@ -8,6 +8,7 @@
     android:background="@color/white"
     tools:context=".activity.GalleryActivity">
 
+    <!--Toolbar-->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/gallery_bar"
         android:layout_width="match_parent"
@@ -16,12 +17,25 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
+            android:id="@+id/gallery_bar_sort_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="20dp"
+            android:gravity="center"
+            android:text="@string/default_text"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
             android:id="@+id/gallery_bar_quantity_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/quantity"
-            android:textSize="15sp"
             android:textColor="@color/grey_text"
+            android:textSize="15sp"
             app:layout_constraintBottom_toTopOf="@id/gallery_bar_quantity_number"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -31,10 +45,10 @@
             android:id="@+id/gallery_bar_quantity_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
             android:text="@string/quantity"
-            android:textSize="15sp"
             android:textColor="@color/black"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/gallery_bar_quantity_text"
             app:layout_constraintStart_toStartOf="@id/gallery_bar_quantity_text"
             app:layout_constraintTop_toBottomOf="@id/gallery_bar_quantity_text" />
@@ -75,23 +89,23 @@
             app:layout_constraintEnd_toStartOf="@id/gallery_bar_delete_button"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <View
+            android:id="@+id/gallery_line_1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey"
+            app:layout_constraintBottom_toBottomOf="@id/gallery_bar" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <View
-        android:id="@+id/gallery_line_1"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/grey"
-        app:layout_constraintTop_toBottomOf="@id/gallery_bar" />
-
-
+    <!--Emotions RV-->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/gallery_emotion_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/grey_background"
         app:layout_constraintBottom_toTopOf="@id/gallery_line_2"
-        app:layout_constraintTop_toBottomOf="@id/gallery_line_1" />
+        app:layout_constraintTop_toBottomOf="@id/gallery_bar" />
 
     <View
         android:id="@+id/gallery_line_2"
@@ -100,6 +114,9 @@
         android:background="@color/grey"
         app:layout_constraintBottom_toBottomOf="parent" />
 
+
+
+    <!--preview layout-->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/gallery_preview_layout"
         android:layout_width="match_parent"
@@ -167,6 +184,102 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/gallery_preview_export_button"
             app:layout_constraintTop_toTopOf="@id/gallery_preview_blank_2" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!--Sort list-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/gallery_sort_layout"
+        android:layout_width="match_parent"
+        android:visibility="invisible"
+        android:layout_height="match_parent" >
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/gallery_sort_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_sort_list"
+            android:translationZ="5dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <!--Input layout-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/gallery_input_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black_alpha_20"
+        android:translationZ="5dp"
+        android:visibility="invisible">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/gallery_input_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/square_all_20"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <EditText
+                android:id="@+id/gallery_input_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginEnd="20dp"
+                android:background="@color/transparent"
+                android:gravity="center"
+                android:hint="@string/sort_input_hint"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/gallery_input_line_1"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="40dp"
+                android:background="@color/grey"
+                app:layout_constraintTop_toBottomOf="@+id/gallery_input_edit" />
+
+            <TextView
+                android:id="@+id/gallery_input_cancel_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                android:text="@string/cancel"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/gallery_input_confirm_button"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/gallery_input_line_1" />
+
+            <TextView
+                android:id="@+id/gallery_input_confirm_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                android:text="@string/confirm"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/gallery_input_cancel_button"
+                app:layout_constraintTop_toBottomOf="@id/gallery_input_line_1" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

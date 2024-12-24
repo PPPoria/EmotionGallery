@@ -17,6 +17,8 @@ import com.example.emotiongallery.utils.PicUtils;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
@@ -62,6 +64,25 @@ public class Presenter {
                     new ThreadPoolExecutor.AbortPolicy());
         }
         return threadPool;
+    }
+
+    public static List<String> getSortList(Context context) {
+        String sortName;
+        sortName = context.getSharedPreferences("Data", Context.MODE_PRIVATE).getString("sortList", "默认");
+        List<String> list = new ArrayList<>();
+        Collections.addAll(list, sortName.split(","));
+        return list;
+    }
+
+    public static void setSortList(Context context, List<String> sortList) {
+        getThreadPool().submit(() -> {
+            StringBuilder sb = new StringBuilder();
+            for (String sort : sortList) {
+                sb.append(sort);
+                sb.append(",");
+            }
+            context.getApplicationContext().getSharedPreferences("Data", Context.MODE_PRIVATE).edit().putString("sortList", sb.toString()).apply();
+        });
     }
 
     //保存表情包到本地
