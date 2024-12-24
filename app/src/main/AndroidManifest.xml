@@ -28,7 +28,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="tencentminiapp102061317" />
+                <data android:scheme="tencent102061317" />
             </intent-filter>
         </activity>
         <activity
@@ -50,6 +50,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:authorities="com.emotiongallery.provider"
+            android:name="androidx.core.content.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
+
+    <queries>
+        <package android:name="com.tencent.mobileqq" />
+        <package android:name="com.tencent.tim" />
+        <package android:name="com.tencent.minihd.qq" />
+    </queries>
 
 </manifest>

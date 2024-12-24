@@ -27,6 +27,12 @@ import com.example.emotiongallery.R;
 import com.example.emotiongallery.adapter.EmotionAdapter;
 import com.example.emotiongallery.module.Emotion;
 import com.example.emotiongallery.presenter.Presenter;
+import com.tencent.connect.share.QQShare;
+import com.tencent.tauth.IUiListener;
+import com.tencent.tauth.Tencent;
+import com.tencent.tauth.UiError;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,11 +41,14 @@ public class GalleryActivity extends AppCompatActivity {
 
     private static final String TAG = "GalleryActivity";
     private ActivityResultLauncher<Intent> pickLauncher;
+    private Tencent mTencent;
 
     public TextView manageBtn;
     public TextView deleteBtn;
     public TextView exportBtn;
     public TextView emotionQuantity;
+    private TextView exportBtnInPreview;
+    private TextView shareBtnInPreview;
 
     private static final List<Uri> uriList = new ArrayList<>();
     private static final List<Emotion> selectedList = new ArrayList<>();
@@ -60,14 +69,16 @@ public class GalleryActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        Tencent.setIsPermissionGranted(true);
+        mTencent = Tencent.createInstance("102061317", getApplicationContext(), "com.emotiongallery.provider");
         pickLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 this::dealResult);
         initView();
         initRV();
         initListener();
-        adapter.refresh(this, "默认");
         overrideBackMethod();
+        adapter.refresh(this, "默认");
     }
 
     //重写回退方法
@@ -94,6 +105,8 @@ public class GalleryActivity extends AppCompatActivity {
         deleteBtn = findViewById(R.id.gallery_bar_delete_button);
         exportBtn = findViewById(R.id.gallery_bar_export_button);
         emotionQuantity = findViewById(R.id.gallery_bar_quantity_number);
+        exportBtnInPreview = findViewById(R.id.gallery_preview_export_button);
+        shareBtnInPreview = findViewById(R.id.gallery_preview_share_button);
         recyclerView = findViewById(R.id.gallery_emotion_list);
         previewLayout = findViewById(R.id.gallery_preview_layout);
         previewImage = findViewById(R.id.gallery_preview_image);
@@ -109,6 +122,8 @@ public class GalleryActivity extends AppCompatActivity {
         manageBtn.setOnClickListener(this::manageBtnClick);
         deleteBtn.setOnClickListener(this::deleteBtnClick);
         exportBtn.setOnClickListener(this::exportBtnClick);
+        exportBtnInPreview.setOnClickListener(this::exportBtnClick);
+        shareBtnInPreview.setOnClickListener(this::shareBtnClick);
         previewLayout.setOnClickListener(v -> previewLayout.setVisibility(View.INVISIBLE));
     }
 
@@ -130,6 +145,39 @@ public class GalleryActivity extends AppCompatActivity {
         selectedList.addAll(adapter.getSelectedList());
         Presenter.getInstance().exportEmotions(this, adapter.getSelectedList());
     }
+
+    private void shareBtnClick(View view) {
+        selectedList.clear();
+        selectedList.addAll(adapter.getSelectedList());
+        final String imagePath = getFilesDir().getAbsolutePath() + "/" + selectedList.get(0).fileName;
+        Log.d(TAG, "shareBtnClick: imagePath:\n" + imagePath);
+        final Bundle params = new Bundle();
+        params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_IMAGE);
+        params.putString(QQShare.SHARE_TO_QQ_IMAGE_LOCAL_URL, imagePath);
+        runOnUiThread(() -> mTencent.shareToQQ(this, params, QQShareListener));
+    }
+
+    IUiListener QQShareListener = new IUiListener() {
+        @Override
+        public void onComplete(Object o) {
+
+        }
+
+        @Override
+        public void onError(UiError uiError) {
+
+        }
+
+        @Override
+        public void onCancel() {
+
+        }
+
+        @Override
+        public void onWarning(int i) {
+
+        }
+    };
 
     //打开相册
     public void openGallery() {
@@ -164,6 +212,7 @@ public class GalleryActivity extends AppCompatActivity {
         adapter.refresh(this, "默认");
     }
 
+    //删除表情结束
     public void deleteEmotionFinished() {
         if (selectedList.isEmpty()) return;
         if (++lastPosition != selectedList.size()) return;

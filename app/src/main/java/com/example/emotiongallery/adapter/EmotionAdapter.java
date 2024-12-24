@@ -1,6 +1,5 @@
 package com.example.emotiongallery.adapter;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -87,22 +86,30 @@ public class EmotionAdapter extends RecyclerView.Adapter<EmotionAdapter.EmotionH
     @Override
     public void onBindViewHolder(@NonNull EmotionHolder holder, int position) {
         for (int i = 0; i < 4; i++) {
+            //判断是否为多选模式，显示或隐藏蒙版
+            if (isMultipleChoice) holder.dividers.get(i).setVisibility(View.VISIBLE);
+            else holder.dividers.get(i).setVisibility(View.INVISIBLE);
+            //隐藏多余的ImageView
             int index = list.size() - i - 4 * position - 1;
-            if (index < 0) break;
+            if (index < 0) {
+                holder.emotions.get(i).setVisibility(View.INVISIBLE);
+                continue;
+            }
+            //由于RV的复用机制，所以需要在有图片的区域重新设置显示ImageView
+            holder.emotions.get(i).setVisibility(View.VISIBLE);
+            //显示添加按钮
             if (index == list.size() - 1 && list.get(index) == addButton) {
-                //显示添加按钮
                 Glide.with(context)
                         .load(R.drawable.ic_add_button)
                         .into(holder.emotions.get(i));
-                holder.dividers.get(i).setVisibility(View.INVISIBLE);
                 holder.emotions.get(i).setOnClickListener(v -> activity.runOnUiThread(activity::openGallery));
                 continue;
             }
+
+            //显示表情图片
             Glide.with(context)
                     .load(context.getFilesDir().getPath() + "/" + list.get(index).fileName)
                     .into(holder.emotions.get(i));
-            if (isMultipleChoice) holder.dividers.get(i).setVisibility(View.VISIBLE);
-            else holder.dividers.get(i).setVisibility(View.INVISIBLE);
             holder.emotions.get(i).setOnClickListener(v -> activity.runOnUiThread(() -> {
                 //点击表情
                 if (isMultipleChoice) {
@@ -118,6 +125,8 @@ public class EmotionAdapter extends RecyclerView.Adapter<EmotionAdapter.EmotionH
                     activity.emotionQuantity.setText(String.valueOf(selectedList.size()));
                 } else {
                     //非多选模式下，点击表情预览
+                    selectedList.clear();
+                    selectedList.add(list.get(index));
                     activity.previewEmotion(list.get(index));
                 }
             }));

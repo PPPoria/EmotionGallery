@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 1225) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Tencent.setIsPermissionGranted(true);
                 startActivity(new Intent(this, GalleryActivity.class));
                 finish();
             } else {

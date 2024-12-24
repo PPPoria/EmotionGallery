@@ -11,6 +11,13 @@ import java.io.InputStream;
 public class PicUtils {
     private static final String TAG = "PicUtils";
 
+    public static final int UNKNOWN = 0;
+    public static final int JPG = 1;
+    public static final int PNG = 2;
+    public static final int GIF = 3;
+    public static final int BMP = 4;
+    public static final int WEBP = 5;
+
     private PicUtils() {
         // This class is not publicly instantiable.
         throw new IllegalStateException();
@@ -28,5 +35,57 @@ public class PicUtils {
             bos.write(buffer, 0, len);
         }
         return bos.toByteArray();
+    }
+
+    public static int getTypeByBytes(byte[] bytes) {
+        int type = UNKNOWN;
+        if (bytes.length >= 8) {
+            if (bytes[0] == (byte) 0xFF
+                    && bytes[1] == (byte) 0xD8)
+                type = JPG;
+            else if (bytes[0] == (byte) 0x89
+                    && bytes[1] == (byte) 0x50
+                    && bytes[2] == (byte) 0x4E
+                    && bytes[3] == (byte) 0x47
+                    && bytes[4] == (byte) 0x0D
+                    && bytes[5] == (byte) 0x0A
+                    && bytes[6] == (byte) 0x1A
+                    && bytes[7] == (byte) 0x0A)
+                type = PNG;
+            else if (bytes[0] == (byte) 0x47
+                    && bytes[1] == (byte) 0x49
+                    && bytes[2] == (byte) 0x46
+                    && bytes[3] == (byte) 0x38
+                    && (bytes[4] == (byte) 0x39 || bytes[4] == (byte) 0x37)
+                    && bytes[5] == (byte) 0x61)
+                type = GIF;
+            else if (bytes[0] == (byte) 0x42
+                    && bytes[1] == (byte) 0x4D)
+                type = BMP;
+            else if (bytes[0] == (byte) 0x57
+                    && bytes[1] == (byte) 0x45
+                    && bytes[2] == (byte) 0x42
+                    && bytes[3] == (byte) 0x50)
+                type = WEBP;
+        }
+        return type;
+    }
+
+    public static String getExtensionByBytes(byte[] bytes) {
+        int type = getTypeByBytes(bytes);
+        switch (type) {
+            case JPG:
+                return ".jpg";
+            case PNG:
+                return ".png";
+            case GIF:
+                return ".gif";
+            case BMP:
+                return ".bmp";
+            case WEBP:
+                return ".webp";
+            default:
+                return null;
+        }
     }
 }

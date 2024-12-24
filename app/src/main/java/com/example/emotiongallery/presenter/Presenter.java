@@ -72,22 +72,25 @@ public class Presenter {
             Emotion emotion = new Emotion();
             emotion.id = System.currentTimeMillis() + i;
             emotion.sort = sort;
-            emotion.fileName = String.valueOf(emotion.id);
             getThreadPool().submit(() -> {
-                String path = activity.getFilesDir().getAbsolutePath() + "/" + emotion.fileName;
-                File file = new File(path);
-                if (!file.exists()) {
-                    try {
+                try {
+                    //获取图片字节
+                    byte[] bytes = PicUtils.uriToByteArray(activity, uri);
+                    //获取文件扩展名
+                    String extension = PicUtils.getExtensionByBytes(bytes);
+                    Log.i(TAG, "saveEmotions: extension = " + extension);
+                    if (extension == null) throw new IOException("unknown extension");
+                    //生成文件名
+                    emotion.fileName = emotion.id + extension;
+                    //生成文件
+                    String path = activity.getFilesDir().getAbsolutePath() + "/" + emotion.fileName;
+                    File file = new File(path);
+                    if (!file.exists()) {
                         if (file.createNewFile()) Log.i(TAG, "create file success");
                         else Log.e(TAG, "create file failed", new IOException());
-                    } catch (IOException e) {
-                        Log.e(TAG, "saveEmotion", e);
                     }
-                }
-                try {
-                    //保存到内部存储
+                    //保存到文件
                     FileOutputStream fos = new FileOutputStream(file);
-                    byte[] bytes = PicUtils.uriToByteArray(activity, uri);
                     fos.write(bytes, 0, bytes.length);
                     fos.flush();
                     fos.close();
@@ -107,6 +110,7 @@ public class Presenter {
         if (emotionList == null || emotionList.isEmpty()) return;
         for (Emotion emotion : emotionList) {
             getThreadPool().submit(() -> {
+                //删除文件
                 String path = activity.getFilesDir().getAbsolutePath() + "/" + emotion.fileName;
                 File file = new File(path);
                 if (file.exists()) {
@@ -116,6 +120,7 @@ public class Presenter {
                     Log.e(TAG, "deleteEmotions: file not exist");
                     Toast.makeText(activity, "delete file failed!", Toast.LENGTH_SHORT).show();
                 }
+                //删除数据库中的记录
                 EmotionDB db = Presenter.getEmotionDB(activity);
                 db.emotionDao().delete(emotion);
                 Log.d(TAG, "deleteEmotions: success");
