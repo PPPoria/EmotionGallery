@@ -32,8 +32,6 @@ import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,13 +86,15 @@ public class GalleryActivity extends AppCompatActivity {
             @Override
             public void handleOnBackPressed() {
                 if (adapter.getIsMultipleChoice()) {
+                    //如果处于多选状态，则退出多选状态
                     adapter.refresh(GalleryActivity.this, "默认");
                     deleteBtn.setVisibility(View.INVISIBLE);
                     exportBtn.setVisibility(View.INVISIBLE);
                     manageBtn.setVisibility(View.VISIBLE);
-                    return;
-                }
-                finish();
+                } else if (previewLayout.getVisibility() == View.VISIBLE) {
+                    //如果处于预览状态，则退出预览状态
+                    previewLayout.setVisibility(View.INVISIBLE);
+                } else finish(); //退出程序
             }
         };
         dispatcher.addCallback(callback);
@@ -226,5 +226,11 @@ public class GalleryActivity extends AppCompatActivity {
                 .load(getFilesDir().getPath() + "/" + emotion.fileName)
                 .into(previewImage);
         previewLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    protected void onDestroy() {
+        Presenter.getEmotionDB(this).close();
+        super.onDestroy();
     }
 }

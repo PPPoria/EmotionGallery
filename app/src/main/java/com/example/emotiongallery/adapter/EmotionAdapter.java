@@ -86,9 +86,6 @@ public class EmotionAdapter extends RecyclerView.Adapter<EmotionAdapter.EmotionH
     @Override
     public void onBindViewHolder(@NonNull EmotionHolder holder, int position) {
         for (int i = 0; i < 4; i++) {
-            //判断是否为多选模式，显示或隐藏蒙版
-            if (isMultipleChoice) holder.dividers.get(i).setVisibility(View.VISIBLE);
-            else holder.dividers.get(i).setVisibility(View.INVISIBLE);
             //隐藏多余的ImageView
             int index = list.size() - i - 4 * position - 1;
             if (index < 0) {
@@ -97,6 +94,9 @@ public class EmotionAdapter extends RecyclerView.Adapter<EmotionAdapter.EmotionH
             }
             //由于RV的复用机制，所以需要在有图片的区域重新设置显示ImageView
             holder.emotions.get(i).setVisibility(View.VISIBLE);
+            //判断是否为多选模式，显示或隐藏蒙版
+            if (isMultipleChoice) holder.dividers.get(i).setVisibility(View.VISIBLE);
+            else holder.dividers.get(i).setVisibility(View.INVISIBLE);
             //显示添加按钮
             if (index == list.size() - 1 && list.get(index) == addButton) {
                 Glide.with(context)

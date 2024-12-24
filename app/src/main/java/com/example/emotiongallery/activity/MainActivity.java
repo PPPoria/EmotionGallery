@@ -15,7 +15,6 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.emotiongallery.R;
-import com.tencent.tauth.Tencent;
 
 public class MainActivity extends AppCompatActivity {
 
