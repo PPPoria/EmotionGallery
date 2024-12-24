@@ -4,7 +4,11 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 
+import androidx.core.content.FileProvider;
+
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -24,7 +28,7 @@ public class PicUtils {
     }
 
     @SuppressLint("Recycle")
-    public static byte[] uriToByteArray(Context context, Uri uri) throws IOException {
+    public static byte[] uriToBytes(Context context, Uri uri) throws IOException {
         InputStream is = context.getContentResolver().openInputStream(uri);
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         byte[] buffer = new byte[1024];
@@ -34,6 +38,18 @@ public class PicUtils {
             if ((len = is.read(buffer)) == -1) break;
             bos.write(buffer, 0, len);
         }
+        return bos.toByteArray();
+    }
+
+    public static byte[] pathToBytes(Context context, String path) throws IOException {
+        File file = new File(path);
+        if (!file.exists()) throw new IOException("File not found: " + path);
+        InputStream is = new FileInputStream(file);
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int len;
+        while ((len = is.read(buffer)) != -1)
+            bos.write(buffer, 0, len);
         return bos.toByteArray();
     }
 
@@ -75,15 +91,15 @@ public class PicUtils {
         int type = getTypeByBytes(bytes);
         switch (type) {
             case JPG:
-                return ".jpg";
+                return "jpg";
             case PNG:
-                return ".png";
+                return "png";
             case GIF:
-                return ".gif";
+                return "gif";
             case BMP:
-                return ".bmp";
+                return "bmp";
             case WEBP:
-                return ".webp";
+                return "webp";
             default:
                 return null;
         }

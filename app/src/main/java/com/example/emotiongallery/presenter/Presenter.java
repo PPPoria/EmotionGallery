@@ -1,7 +1,9 @@
 package com.example.emotiongallery.presenter;
 
 import android.content.Context;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -75,19 +77,19 @@ public class Presenter {
             getThreadPool().submit(() -> {
                 try {
                     //获取图片字节
-                    byte[] bytes = PicUtils.uriToByteArray(activity, uri);
+                    byte[] bytes = PicUtils.uriToBytes(activity, uri);
                     //获取文件扩展名
                     String extension = PicUtils.getExtensionByBytes(bytes);
                     Log.i(TAG, "saveEmotions: extension = " + extension);
                     if (extension == null) throw new IOException("unknown extension");
                     //生成文件名
-                    emotion.fileName = emotion.id + extension;
+                    emotion.fileName = emotion.id + "." + extension;
                     //生成文件
                     String path = activity.getFilesDir().getAbsolutePath() + "/" + emotion.fileName;
                     File file = new File(path);
                     if (!file.exists()) {
                         if (file.createNewFile()) Log.i(TAG, "create file success");
-                        else Log.e(TAG, "create file failed", new IOException());
+                        else throw new IOException("create file failed");
                     }
                     //保存到文件
                     FileOutputStream fos = new FileOutputStream(file);
@@ -98,6 +100,7 @@ public class Presenter {
                     EmotionDB db = Presenter.getEmotionDB(activity);
                     db.emotionDao().insert(emotion);
                     Log.i(TAG, "saveEmotion: success");
+                    Log.i(TAG, "saveEmotions: path = \n" + path);
                 } catch (IOException e) {
                     Log.e(TAG, "saveEmotion", e);
                 }
@@ -130,6 +133,33 @@ public class Presenter {
     }
 
     public void exportEmotions(GalleryActivity activity, List<Emotion> emotionList) {
-
+        if (emotionList == null || emotionList.isEmpty()) return;
+        for (Emotion emotion : emotionList) {
+            getThreadPool().submit(() -> {
+                try {
+                    //有无文件夹，没有就创建
+                    File folder = new File(Environment.getExternalStoragePublicDirectory("Pictures").getAbsolutePath() + "/", "EmotionGallery");
+                    if (!folder.exists()) {
+                        if (folder.mkdirs()) Log.i(TAG, "create folder success");
+                        else throw new IOException("create folder failed");
+                    }
+                    //导出文件
+                    String path = activity.getFilesDir().getAbsolutePath() + "/" + emotion.fileName;
+                    byte[] bytes = PicUtils.pathToBytes(activity, path);
+                    File file = new File(folder, emotion.fileName);
+                    FileOutputStream fos = new FileOutputStream(file);
+                    fos.write(bytes, 0, bytes.length);
+                    fos.flush();
+                    fos.close();
+                    //相册更新
+                    MediaScannerConnection.scanFile(activity, new String[]{file.getAbsolutePath()}, null, null);
+                    Log.i(TAG, "exportEmotions: success");
+                    Log.i(TAG, "exportEmotions: path = \n" + file.getAbsolutePath());
+                } catch (IOException e) {
+                    Log.e(TAG, "exportEmotions", e);
+                }
+                activity.runOnUiThread(activity::exportEmotionFinished);
+            });
+        }
     }
 }

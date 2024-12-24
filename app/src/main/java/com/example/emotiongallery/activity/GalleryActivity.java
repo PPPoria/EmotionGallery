@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.OnBackPressedCallback;
@@ -39,6 +40,7 @@ public class GalleryActivity extends AppCompatActivity {
 
     private static final String TAG = "GalleryActivity";
     private ActivityResultLauncher<Intent> pickLauncher;
+    private static final String APP_ID = "1112341671";
     private Tencent mTencent;
 
     public TextView manageBtn;
@@ -68,7 +70,7 @@ public class GalleryActivity extends AppCompatActivity {
             return insets;
         });
         Tencent.setIsPermissionGranted(true);
-        mTencent = Tencent.createInstance("102061317", getApplicationContext(), "com.emotiongallery.provider");
+        mTencent = Tencent.createInstance(APP_ID, getApplicationContext(), "com.emotiongallery.provider");
         pickLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 this::dealResult);
@@ -218,6 +220,16 @@ public class GalleryActivity extends AppCompatActivity {
         if (++lastPosition != selectedList.size()) return;
         lastPosition = 0;
         adapter.refresh(this, "默认");
+        Toast.makeText(this, "删除成功", Toast.LENGTH_SHORT).show();
+    }
+
+    //导出表情结束
+    public void exportEmotionFinished() {
+        if (selectedList.isEmpty()) return;
+        if (++lastPosition != selectedList.size()) return;
+        lastPosition = 0;
+        adapter.refresh(this, "默认");
+        Toast.makeText(this, "导出成功", Toast.LENGTH_SHORT).show();
     }
 
     //预览表情
