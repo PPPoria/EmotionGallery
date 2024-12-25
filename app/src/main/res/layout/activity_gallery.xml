@@ -191,24 +191,36 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/gallery_sort_layout"
         android:layout_width="match_parent"
-        android:visibility="invisible"
+        android:visibility="visible"
         android:layout_height="match_parent" >
+
+        <TextView
+            android:id="@+id/gallery_sort_width"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/name_width"
+            android:layout_marginStart="20dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:visibility="invisible"
+            android:textSize="18sp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/gallery_sort_list"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@drawable/shape_sort_list"
             android:translationZ="5dp"
+            app:layout_constraintEnd_toEndOf="@id/gallery_sort_width"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    <!--Input layout-->
+    <!--popup layout-->
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/gallery_input_background"
+        android:id="@+id/gallery_popup_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/black_alpha_20"
@@ -216,7 +228,7 @@
         android:visibility="invisible">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/gallery_input_layout"
+            android:id="@+id/gallery_popup_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -227,30 +239,58 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
+            <TextView
+            android:id="@+id/gallery_popup_tittle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@color/transparent"
+            android:gravity="center"
+            android:text="@string/sort_delete_hint"
+            android:visibility="visible"
+            android:textColor="@color/grey_text"
+            android:textSize="18sp"
+            app:layout_constraintTop_toTopOf="parent" />
+
             <EditText
-                android:id="@+id/gallery_input_edit"
+                android:id="@+id/gallery_popup_input_sort_edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="40dp"
                 android:layout_marginEnd="20dp"
                 android:background="@color/transparent"
                 android:gravity="center"
                 android:hint="@string/sort_input_hint"
+                android:visibility="invisible"
                 android:textColor="@color/black"
                 android:textSize="20sp"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="@id/gallery_popup_delete_sort_text"/>
+
+            <TextView
+                android:id="@+id/gallery_popup_delete_sort_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@color/transparent"
+                android:gravity="center"
+                android:text="@string/default_text"
+                android:visibility="invisible"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                app:layout_constraintTop_toBottomOf="@id/gallery_popup_tittle" />
 
             <View
-                android:id="@+id/gallery_input_line_1"
+                android:id="@+id/gallery_popup_line_1"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="40dp"
                 android:background="@color/grey"
-                app:layout_constraintTop_toBottomOf="@+id/gallery_input_edit" />
+                app:layout_constraintTop_toBottomOf="@+id/gallery_popup_delete_sort_text" />
 
             <TextView
-                android:id="@+id/gallery_input_cancel_button"
+                android:id="@+id/gallery_popup_cancel_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -260,12 +300,12 @@
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/gallery_input_confirm_button"
+                app:layout_constraintEnd_toStartOf="@id/gallery_popup_confirm_button"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/gallery_input_line_1" />
+                app:layout_constraintTop_toBottomOf="@id/gallery_popup_line_1" />
 
             <TextView
-                android:id="@+id/gallery_input_confirm_button"
+                android:id="@+id/gallery_popup_confirm_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -276,8 +316,8 @@
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/gallery_input_cancel_button"
-                app:layout_constraintTop_toBottomOf="@id/gallery_input_line_1" />
+                app:layout_constraintStart_toEndOf="@id/gallery_popup_cancel_button"
+                app:layout_constraintTop_toBottomOf="@id/gallery_popup_line_1" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

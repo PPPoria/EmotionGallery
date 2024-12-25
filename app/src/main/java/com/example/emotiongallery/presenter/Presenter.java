@@ -130,6 +130,7 @@ public class Presenter {
         }
     }
 
+    //删除表情包
     public void deleteEmotions(GalleryActivity activity, List<Emotion> emotionList) {
         if (emotionList == null || emotionList.isEmpty()) return;
         for (Emotion emotion : emotionList) {
@@ -153,6 +154,12 @@ public class Presenter {
         }
     }
 
+    //删除分类下的所有表情包
+    public void deleteEmotionsBySort(GalleryActivity activity, String sort) {
+        getThreadPool().submit(() -> getEmotionDB(activity).emotionDao().deleteEmotionsBySort(sort));
+    }
+
+    //导出表情包到相册
     public void exportEmotions(GalleryActivity activity, List<Emotion> emotionList) {
         if (emotionList == null || emotionList.isEmpty()) return;
         for (Emotion emotion : emotionList) {

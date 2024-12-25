@@ -104,6 +104,7 @@ public class EmotionAdapter extends RecyclerView.Adapter<EmotionAdapter.EmotionH
                 Glide.with(context)
                         .load(R.drawable.ic_add_button)
                         .into(holder.emotions.get(i));
+                holder.emotions.get(i).setAlpha(0.2f);
                 holder.emotions.get(i).setOnClickListener(v -> activity.runOnUiThread(activity::openGallery));
                 continue;
             }
@@ -112,6 +113,7 @@ public class EmotionAdapter extends RecyclerView.Adapter<EmotionAdapter.EmotionH
             Glide.with(context)
                     .load(context.getFilesDir().getPath() + "/" + list.get(index).fileName)
                     .into(holder.emotions.get(i));
+            holder.emotions.get(i).setAlpha(1.0f);
             holder.emotions.get(i).setOnClickListener(v -> activity.runOnUiThread(() -> {
                 //点击表情
                 if (isMultipleChoice) {

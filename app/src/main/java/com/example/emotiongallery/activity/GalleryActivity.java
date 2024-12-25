@@ -70,12 +70,17 @@ public class GalleryActivity extends AppCompatActivity {
     private TextView exportBtnInPreview;
     private TextView shareBtnInPreview;
 
-    //new sort
-    private ConstraintLayout inputBackground;
-    private ConstraintLayout inputLayout;
+    //popup
+    private ConstraintLayout popupBackground;
+    private ConstraintLayout popupLayout;
+    private TextView popupTittle;
+    private TextView deleteText;
     private EditText inputText;
-    private TextView inputConfirmBtn;
-    private TextView inputCancelBtn;
+    private TextView popupConfirmBtn;
+    private TextView popupCancelBtn;
+    private static final int POPUP_INPUT = 1;
+    private static final int POPUP_DELETE_SORT = 2;
+    private int status = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,12 +146,14 @@ public class GalleryActivity extends AppCompatActivity {
         //sortRV
         sortLayout = findViewById(R.id.gallery_sort_layout);
         sortRV = findViewById(R.id.gallery_sort_list);
-        //new sort
-        inputBackground = findViewById(R.id.gallery_input_background);
-        inputLayout = findViewById(R.id.gallery_input_layout);
-        inputText = findViewById(R.id.gallery_input_edit);
-        inputConfirmBtn = findViewById(R.id.gallery_input_confirm_button);
-        inputCancelBtn = findViewById(R.id.gallery_input_cancel_button);
+        //popup
+        popupBackground = findViewById(R.id.gallery_popup_background);
+        popupLayout = findViewById(R.id.gallery_popup_layout);
+        popupTittle = findViewById(R.id.gallery_popup_tittle);
+        deleteText = findViewById(R.id.gallery_popup_delete_sort_text);
+        inputText = findViewById(R.id.gallery_popup_input_sort_edit);
+        popupConfirmBtn = findViewById(R.id.gallery_popup_confirm_button);
+        popupCancelBtn = findViewById(R.id.gallery_popup_cancel_button);
     }
 
     private void initRV() {
@@ -167,13 +174,13 @@ public class GalleryActivity extends AppCompatActivity {
         sortLayout.setOnClickListener(v -> sortLayout.setVisibility(View.INVISIBLE));
         sortText.setOnClickListener(this::sortTextClick);
         previewLayout.setOnClickListener(this::emotionClick);
-        inputBackground.setOnClickListener(this::cancelInput);
-        inputLayout.setOnClickListener(this::nothing);
-        inputCancelBtn.setOnClickListener(this::cancelInput);
-        inputConfirmBtn.setOnClickListener(this::confirmInput);
+        popupBackground.setOnClickListener(this::cancelInput);
+        popupLayout.setOnClickListener(this::doNothing);
+        popupCancelBtn.setOnClickListener(this::cancelInput);
+        popupConfirmBtn.setOnClickListener(this::confirmInput);
     }
 
-    private void nothing(View view) {
+    private void doNothing(View view) {
         //do nothing
     }
 
@@ -248,23 +255,30 @@ public class GalleryActivity extends AppCompatActivity {
         sortLayout.setVisibility(View.VISIBLE);
     }
 
-    //取消输入
+    //取消按钮点击
     private void cancelInput(View view) {
-        inputBackground.setVisibility(View.INVISIBLE);
-        inputText.setText("");
+        popupBackground.setVisibility(View.INVISIBLE);
     }
 
-    //确认输入
+    //确认按钮点击
     private void confirmInput(View view) {
-        String sort = inputText.getText().toString();
-        if (sort.isEmpty()) return;
-        if (sortAdapter.addSort(sort)) {
-            emotionsAdapter.refresh(this, sort);
-            sortText.setText(sort);
-            inputBackground.setVisibility(View.INVISIBLE);
-            inputText.setText("");
-        } else {
-            Toast.makeText(this, "分类已存在", Toast.LENGTH_SHORT).show();
+        if (status == POPUP_INPUT) {
+            String sort = inputText.getText().toString();
+            if (sort.isEmpty()) return;
+            if (sortAdapter.addSort(sort)) {
+                emotionsAdapter.refresh(this, sort);
+                sortText.setText(sort);
+                popupBackground.setVisibility(View.INVISIBLE);
+            } else Toast.makeText(this, "分类已存在", Toast.LENGTH_SHORT).show();
+        } else if (status == POPUP_DELETE_SORT) {
+            String sort = deleteText.getText().toString();
+            if (sort.isEmpty()) return;
+            if (sortAdapter.deleteSort(sort)) {
+                emotionsAdapter.refresh(this, "默认");
+                sortText.setText("默认");
+                popupBackground.setVisibility(View.INVISIBLE);
+                Presenter.getInstance().deleteEmotionsBySort(this, sort);
+            } else Toast.makeText(this, "分类不存在", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -277,10 +291,24 @@ public class GalleryActivity extends AppCompatActivity {
         }
     }
 
-    //添加分类
+    //“添加分类”点击
     public void addSort() {
-        inputBackground.setVisibility(View.VISIBLE);
+        status = POPUP_INPUT;
+        popupBackground.setVisibility(View.VISIBLE);
+        popupTittle.setText(getText(R.string.sort_input_hint));
+        inputText.setVisibility(View.VISIBLE);
         inputText.setText("");
+        deleteText.setVisibility(View.INVISIBLE);
+    }
+
+    //“删除分类”点击
+    public void deleteSort(String sort) {
+        status = POPUP_DELETE_SORT;
+        popupBackground.setVisibility(View.VISIBLE);
+        popupTittle.setText(getText(R.string.sort_delete_hint));
+        inputText.setVisibility(View.INVISIBLE);
+        deleteText.setVisibility(View.VISIBLE);
+        deleteText.setText(sort);
     }
 
     //打开相册

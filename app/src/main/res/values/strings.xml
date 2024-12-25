@@ -8,7 +8,9 @@
     <string name="export">导出</string>
     <string name="shareToQQ">分享到QQ</string>
     <string name="sort_input_hint">请输入新类名</string>
+    <string name="sort_delete_hint">是否删除该分类</string>
     <string name="confirm">确认</string>
     <string name="cancel">取消</string>
     <string name="default_text">默认</string>
+    <string name="name_width">这是分类名的最大宽度</string>
 </resources>

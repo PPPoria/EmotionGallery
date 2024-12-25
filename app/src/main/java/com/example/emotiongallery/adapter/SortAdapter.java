@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -54,6 +55,22 @@ public class SortAdapter extends RecyclerView.Adapter<SortAdapter.SortHolder> {
         return true;
     }
 
+    //包含刷新
+    public boolean deleteSort(String sort) {
+        int i;
+        for (i = 0; i < list.size(); i++) {
+            if (list.get(i).equals(sort)) {
+                list.remove(i);
+                break;
+            }
+        }
+        if (i == list.size() - 1) return false;
+        list.remove(list.size() - 1);
+        activity.runOnUiThread(this::notifyDataSetChanged);
+        Presenter.setSortList(context, list);
+        return true;
+    }
+
     @NonNull
     @Override
     public SortHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -66,10 +83,14 @@ public class SortAdapter extends RecyclerView.Adapter<SortAdapter.SortHolder> {
         holder.sortName.setText(list.get(position));
         if (position == list.size() - 1) {
             holder.sortName.setTextColor(Color.parseColor("#969696"));
+            holder.deleteBtn.setVisibility(View.INVISIBLE);
             holder.sortName.setOnClickListener(v -> activity.runOnUiThread(activity::addSort));
         } else {
             holder.sortName.setTextColor(Color.parseColor("#000000"));
+            if (position == 0) holder.deleteBtn.setVisibility(View.INVISIBLE);
+            else holder.deleteBtn.setVisibility(View.VISIBLE);
             holder.sortName.setOnClickListener(v -> activity.runOnUiThread(() -> activity.changeSort(list.get(position))));
+            holder.deleteBtn.setOnClickListener(v -> activity.runOnUiThread(() -> activity.deleteSort(list.get(position))));
         }
     }
 
@@ -80,10 +101,12 @@ public class SortAdapter extends RecyclerView.Adapter<SortAdapter.SortHolder> {
 
     public static class SortHolder extends RecyclerView.ViewHolder {
         public TextView sortName;
+        public ImageView deleteBtn;
 
         public SortHolder(@NonNull View itemView) {
             super(itemView);
             sortName = itemView.findViewById(R.id.item_sort_name);
+            deleteBtn = itemView.findViewById(R.id.item_sort_delete);
         }
     }
 }

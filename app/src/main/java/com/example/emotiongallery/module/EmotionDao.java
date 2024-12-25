@@ -15,6 +15,9 @@ public interface EmotionDao {
     @Delete
     void delete(Emotion emotion);
 
+    @Query("DELETE FROM Emotion WHERE sort = :sort")
+    void deleteEmotionsBySort(String sort);
+
     @Query("SELECT * FROM Emotion")
     List<Emotion> getAllEmotions();
 
