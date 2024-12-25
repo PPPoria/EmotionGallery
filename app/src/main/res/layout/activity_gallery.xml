@@ -191,7 +191,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/gallery_sort_layout"
         android:layout_width="match_parent"
-        android:visibility="visible"
+        android:visibility="invisible"
         android:layout_height="match_parent" >
 
         <TextView
