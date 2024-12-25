@@ -64,7 +64,7 @@ public class SortAdapter extends RecyclerView.Adapter<SortAdapter.SortHolder> {
                 break;
             }
         }
-        if (i == list.size() - 1) return false;
+        if (i == list.size()) return false;
         list.remove(list.size() - 1);
         activity.runOnUiThread(this::notifyDataSetChanged);
         Presenter.setSortList(context, list);
