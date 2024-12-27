@@ -42,7 +42,7 @@ public class GalleryActivity extends AppCompatActivity {
 
     private static final String TAG = "GalleryActivity";
     private ActivityResultLauncher<Intent> pickLauncher;
-    private static final String APP_ID = "1112341671";
+    private static final String APP_ID = "102584418";
     private Tencent mTencent;
 
     //bar
